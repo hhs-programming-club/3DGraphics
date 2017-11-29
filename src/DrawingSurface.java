@@ -7,8 +7,14 @@ public class DrawingSurface extends PApplet {
 	private ArrayList<Integer> keys;
 	private boolean clicked;
 	private float x, y;
-	private float rate = 0.015f;
+	private float rate = .015f;
 	private Color nonVisible = Color.darkGray.brighter();
+	private Color red = Color.red.darker();
+	private Color blue = Color.blue.brighter();
+	private Color green = Color.green.darker();
+	private Color yellow = Color.yellow.darker();
+	private Color orange = Color.orange.darker();
+	private Color white = Color.white;
 
 	public DrawingSurface() {
 		keys = new ArrayList<Integer>();
@@ -25,13 +31,31 @@ public class DrawingSurface extends PApplet {
 	public void draw() {
 		clear();
 		background(128);
-		pushMatrix();
-		translate(width / 2.0f, height / 2.0f, -100);
-		rotateY(y);
-		rotateX(x);
-		noStroke();
-		multiColoredBox(Color.red, nonVisible, nonVisible, Color.blue, nonVisible, Color.green);
-		popMatrix();
+
+		float xLoc = width / 6f;
+		float yLoc = height / 6f;
+		float zLoc = 0;
+		 translate(xLoc*3, yLoc*4, zLoc);
+
+//		camera(70f, this.y, this.x, xLoc * 4, yLoc * 4, zLoc, 0.0f, 1.0f, 0.0f);
+		 rotateX(this.x);
+		rotateY(this.y);
+		 
+		//Top Left Section
+		multiColoredBox(red, nonVisible, nonVisible, blue, nonVisible, green, -xLoc, -yLoc, 0);
+		multiColoredBox(nonVisible, white, nonVisible, blue, nonVisible, green, -xLoc, -yLoc, -95);
+		
+		//Top Right Section
+		multiColoredBox(red, nonVisible, nonVisible, blue, yellow, nonVisible,  10, -yLoc, 0);
+		multiColoredBox(nonVisible, white, nonVisible, blue, yellow, nonVisible,  10, -yLoc, -95);
+
+		//Bottom Left Section
+		multiColoredBox(red, nonVisible, orange, nonVisible, nonVisible, green, -xLoc, 10, 0);
+		multiColoredBox(nonVisible, white, orange, nonVisible, nonVisible, green, -yLoc, 10, -95);
+
+		//Bottom Right Section
+		multiColoredBox(red, nonVisible, orange, nonVisible, yellow, nonVisible, 10, 10, 0);
+		multiColoredBox(nonVisible, white, orange, nonVisible, yellow, nonVisible, 10, 10, -95);
 
 		if (checkKey(RIGHT))
 			y += rate;
@@ -65,8 +89,8 @@ public class DrawingSurface extends PApplet {
 	public void mouseDragged() {
 		if (clicked) {
 			// Code for when mouse is dragged here
-			x += (pmouseY - mouseY) * rate;
-			y += (mouseX - pmouseX) * rate;
+			y += (pmouseY - mouseY) * rate;
+			x += (pmouseX - mouseX) * rate;
 		}
 	}
 
@@ -79,9 +103,12 @@ public class DrawingSurface extends PApplet {
 	}
 
 	// Params in order: front of cube, back, bottom, top, right, left
-	public void multiColoredBox(Color f1, Color f2, Color f3, Color f4, Color f5, Color f6) {
+	public void multiColoredBox(Color f1, Color f2, Color f3, Color f4, Color f5, Color f6, float x, float y, float z) {
 		pushStyle();
-		scale(90);
+		pushMatrix();
+		translate(x, y, z);
+		noStroke();
+		scale(45);
 		// Front
 		beginShape(QUADS);
 		fill(f1.getRGB());
@@ -131,6 +158,7 @@ public class DrawingSurface extends PApplet {
 		vertex(-1, 1, -1);
 		endShape();
 		popStyle();
+		popMatrix();
 	}
 
 }
